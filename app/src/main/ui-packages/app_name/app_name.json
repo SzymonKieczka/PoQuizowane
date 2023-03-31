@@ -1,0 +1,134 @@
+{
+  "name": "app_name",
+  "version": 32,
+  "source-key": {
+    "type": "figma",
+    "file": "0cmrQ7KROqfKRCKJcTosHb",
+    "node": "234:2032",
+    "version": "3266721147",
+    "component-id": "8b9448db1a88986873a87a383c0f872aaa91c76e"
+  },
+  "default": "appName",
+  "design": {
+    "atoms": [
+      {
+        "type": "group",
+        "id": "top_level",
+        "root": "true"
+      },
+      {
+        "type": "group",
+        "id": "appNameGroup"
+      },
+      {
+        "type": "text",
+        "id": "appNameText"
+      },
+      {
+        "type": "vector",
+        "id": "questionmark"
+      }
+    ],
+    "modes": {
+      "appName": {
+        "rules": [
+          {
+            "id": "top_level",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "shrink"
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "children": [
+              "appNameGroup"
+            ],
+            "item-spacing": "10.0",
+            "clip-content": "false"
+          },
+          {
+            "id": "appNameGroup",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": "302.0"
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": "111.8336181640625"
+              }
+            },
+            "is-structured": "false",
+            "children": [
+              "appNameText",
+              "questionmark"
+            ],
+            "clip-content": "false"
+          },
+          {
+            "id": "appNameText",
+            "margin": {
+              "top": "49.8336181640625"
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": "1.0"
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": "1.0"
+              }
+            },
+            "font-weight": "700.0",
+            "color": {
+              "alpha": "1.0",
+              "hue": "0.0",
+              "saturation": "0.0",
+              "value": "1.0"
+            },
+            "text-content": "Poquızowane",
+            "overflow": "visible",
+            "max-lines": "-1",
+            "text-align": "left",
+            "text-size": "50.0",
+            "line-height": "1.171875"
+          },
+          {
+            "id": "questionmark",
+            "margin": {
+              "left": "90.30859375",
+              "right": "153.2783203125",
+              "bottom": "50.169891357421875"
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": "1.0"
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": "1.0"
+              }
+            },
+            "vector-content": "questionmark.svg"
+          }
+        ]
+      }
+    }
+  },
+  "previews": [
+    {
+      "design": "appName",
+      "size": {
+        "width": 302.0,
+        "height": 111.8336181640625
+      }
+    }
+  ],
+  "adin-component-search-paths": [],
+  "image-search-paths": [],
+  "vector-search-paths": []
+}
