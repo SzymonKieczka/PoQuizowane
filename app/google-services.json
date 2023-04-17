@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1065938490747",
+    "project_id": "poquizowane",
+    "storage_bucket": "poquizowane.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1065938490747:android:6eb0ac178420613ac059de",
+        "android_client_info": {
+          "package_name": "com.example.poquizowane"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1065938490747-kl43lhqk2gl93aq1k5vfpu42i8jpivm0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcYWWJvekZi1iecho-5FgR5EDdbW3P6f4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1065938490747-kl43lhqk2gl93aq1k5vfpu42i8jpivm0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,8 @@
 package com.example.poquizowane
 
+import android.content.Context
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -21,7 +23,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -31,15 +32,22 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.poquizowane.ui.theme.PoQuizowaneTheme
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.ui.platform.LocalContext
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 class MainActivity : ComponentActivity() {
     private var contentHasLoaded = false
+    private lateinit var auth: FirebaseAuth
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        auth = Firebase.auth
         val splashScreen = installSplashScreen()
+
         super.onCreate(savedInstanceState)
         setContent {
             PoQuizowaneTheme {
@@ -47,24 +55,57 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color(0, 151, 91)
                 ) {
-                    SignInSignUpScreen()
+                    SignInSignUpScreen(
+                        signIn = { email, password -> signIn(email, password) },
+                        signUp = { email, password -> signUp(email, password) }
+                    )
                 }
             }
         }
     }
+    private fun signIn(email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    showMessage(baseContext, "Sign in successful")
+                } else {
+                    showMessage(baseContext, "Sign in failed: ${task.exception?.localizedMessage}")
+                }
+            }
+    }
+
+    private fun signUp(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign up success
+                    showMessage(baseContext, "Sign up successful")
+                } else {
+                    // Sign up failed
+                    showMessage(baseContext, "Sign up failed: ${task.exception?.localizedMessage}")
+                }
+            }
+    }
 }
 
-@Preview(showBackground = true) //, backgroundColor = 4278228827)
-@Composable
-fun DefaultPreview() {
-    PoQuizowaneTheme {
-        SignInSignUpScreen()
-    }
+//@Preview(showBackground = true) //, backgroundColor = 4278228827)
+//@Composable
+//fun DefaultPreview() {
+//    PoQuizowaneTheme {
+//        SignInSignUpScreen()
+//    }
+//}
+
+fun showMessage(context: Context, message:String){
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignInSignUpScreen() {
+fun SignInSignUpScreen(
+    signIn: (email: String, password: String) -> Unit,
+    signUp: (email: String, password: String) -> Unit
+) {
 
     var email by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(""))
@@ -82,6 +123,7 @@ fun SignInSignUpScreen() {
     }
     var isSignUp by rememberSaveable { mutableStateOf(false) }
     val cardWeight by animateFloatAsState(if (isSignUp) 1.5f else 1f)
+    val context = LocalContext.current
 
 
     PoQuizowaneTheme {
@@ -193,7 +235,15 @@ fun SignInSignUpScreen() {
                                 Color(0, 151, 91),
                             ),
                             onClick = {
-                                isSignUp = false
+                                     if(isSignUp)
+                                         if (password.text == confirmPassword.text) {
+                                             signUp(email.text, password.text)
+                                         }
+                                         else
+                                             Toast.makeText(context, "Passwords don't match", Toast.LENGTH_SHORT).show()
+                                     else {
+                                         signIn(email.text, password.text)
+                                     }
 
                             },
                             modifier = Modifier
@@ -201,21 +251,27 @@ fun SignInSignUpScreen() {
                                 .height(60.dp)
                         )
                         {
-                            Text("Login")
+                            if (isSignUp)
+                                Text("Sign up")
+                            else
+                                Text("Sign in")
                         }
 
                         Text(text = "or", fontSize = 14.sp, modifier = Modifier.padding(10.dp))
 
                         OutlinedButton(
                             onClick = {
-                                isSignUp = true
+                                isSignUp = !isSignUp
                             },
                             modifier = Modifier
                                 .fillMaxWidth(1f)
                                 .height(60.dp)
                         )
                         {
-                            Text("Sign up")
+                            if (isSignUp)
+                                Text("Already have an account? Sign in", fontSize = 14.sp)
+                            else
+                                Text("Don't have an account? Sign up", fontSize = 14.sp)
                         }
                     }
                 }
