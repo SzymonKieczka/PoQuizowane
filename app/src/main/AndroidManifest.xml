@@ -14,6 +14,19 @@
         android:theme="@style/Theme.PoQuizowane"
         tools:targetApi="31">
         <activity
+            android:name=".LeaderboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".QuizSummaryActivity"
+            android:exported="false"
+            android:label="@string/title_activity_quiz_summary"
+            android:theme="@style/Theme.PoQuizowane" />
+        <activity
+            android:name=".QuizSelectActivity"
+            android:exported="false"
+            android:label="@string/title_activity_quiz_select"
+            android:theme="@style/Theme.PoQuizowane" />
+        <activity
             android:name=".HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home"
