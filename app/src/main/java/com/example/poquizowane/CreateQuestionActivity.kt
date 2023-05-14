@@ -2,6 +2,7 @@ package com.example.poquizowane
 
 import android.content.Intent
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,8 +27,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.poquizowane.ui.theme.PoQuizowaneTheme
 
-class CreateQuestionActivity : ComponentActivity() {
+class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener {
     lateinit var quiz: Quiz
+    private var tts: TextToSpeech? = null
+
+    override fun onInit(p0: Int) {
+
+    }
+
+    fun say(text: String) {
+        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +52,7 @@ class CreateQuestionActivity : ComponentActivity() {
             }
         }
         quiz = intent.getSerializableExtra("EXTRA_QUIZ") as Quiz
+        tts = TextToSpeech(this, this)
     }
 
     @Composable
@@ -324,6 +335,8 @@ class CreateQuestionActivity : ComponentActivity() {
                         colors = ButtonDefaults.buttonColors(Color.White),
                         onClick = {
                             if (validate()) {
+                                val str = "description $description answers: $answer1, $answer2, $answer3, $answer4."
+                                say(str)
                                 val question = Question(description, answer1, answer2, answer3, answer4, correct)
                                 quiz.addQuestion(question)
                                 val intent = Intent(applicationContext, CreateQuestionActivity::class.java)
