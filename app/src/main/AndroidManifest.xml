@@ -14,6 +14,12 @@
         android:theme="@style/Theme.PoQuizowane"
         tools:targetApi="31">
         <activity
+            android:name=".CreateQuestionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CreateQuizActivity"
+            android:exported="false" />
+        <activity
             android:name=".LeaderboardActivity"
             android:exported="false" />
         <activity

@@ -85,7 +85,6 @@ fun SignInSignUpScreen(authViewModel: AuthViewModel) {
                         .padding(24.dp)
                 ) {
                     Column(
-
                         Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center

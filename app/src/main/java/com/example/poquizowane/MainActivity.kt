@@ -7,8 +7,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.poquizowane.ui.theme.PoQuizowaneTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -41,6 +43,19 @@ class MainActivity : ComponentActivity() {
         if(firebaseAuth.currentUser != null){
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    @Preview(showBackground = true)
+    @Composable
+    fun DefaultPreview() {
+        PoQuizowaneTheme {
+            Surface (
+                modifier = Modifier.fillMaxSize(),
+                color = Color(0, 151, 91)
+            ) {
+                SignInSignUpScreen(authViewModel)
+            }
         }
     }
 }

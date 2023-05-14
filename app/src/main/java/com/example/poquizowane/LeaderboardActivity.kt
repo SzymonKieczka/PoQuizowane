@@ -38,7 +38,7 @@ class LeaderboardActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                 ) {
                     BackgroundImage()
-                    LeaderBoard(this)
+                    LeaderBoard()
                 }
             }
         }
@@ -55,7 +55,7 @@ class LeaderboardActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun LeaderBoard(context: Context) {
+    fun LeaderBoard() {
         val composition by rememberLottieComposition(
             LottieCompositionSpec.RawRes(R.raw.leader)
         )
@@ -100,7 +100,7 @@ class LeaderboardActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize()
             ) {
                 BackgroundImage()
-                LeaderBoard(this)
+                LeaderBoard()
             }
         }
     }

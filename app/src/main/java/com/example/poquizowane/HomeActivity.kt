@@ -1,10 +1,7 @@
 package com.example.poquizowane
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Space
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -27,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import com.example.poquizowane.ui.theme.PoQuizowaneTheme
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.relay.compose.BoxScopeInstanceImpl.align
 
 class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +35,7 @@ class HomeActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     BackgroundImage()
-                    Buttons(this)
+                    Buttons()
                 }
             }
         }
@@ -72,8 +68,6 @@ class HomeActivity : ComponentActivity() {
         }
     }
 
-
-
     @Composable
     fun MyButton(text: String, onclick: () -> Unit) {
         Button(
@@ -89,7 +83,7 @@ class HomeActivity : ComponentActivity() {
     }
 
     @Composable
-    fun Buttons(context: Context) {
+    fun Buttons() {
         Column(
             modifier = Modifier.padding(all = 30.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -99,9 +93,9 @@ class HomeActivity : ComponentActivity() {
             Spacer(modifier = Modifier.padding(10.dp))
             MyButton("Create") { create() }
             Spacer(modifier = Modifier.padding(10.dp))
-            MyButton("Leaderboard") { leaderboard(context) }
+            MyButton("Leaderboard") { leaderboard() }
             Spacer(modifier = Modifier.padding(10.dp))
-            MyButton("Log out") { logout(context) }
+            MyButton("Log out") { logout() }
         }
     }
 
@@ -110,13 +104,12 @@ class HomeActivity : ComponentActivity() {
     @Composable
     fun prev() {
         PoQuizowaneTheme {
-            // A surface container using the 'background' color from the theme
             Surface(
                 modifier = Modifier.fillMaxSize()
                 //color = MaterialTheme.colors.background
             ) {
                 BackgroundImage()
-                Buttons(this)
+                Buttons()
             }
         }
     }
@@ -127,18 +120,19 @@ class HomeActivity : ComponentActivity() {
     }
 
     private fun create(){
-        Toast.makeText(applicationContext, "create", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun leaderboard(context: Context){
-        val intent = Intent(context, LeaderboardActivity::class.java)
+        val intent = Intent(this, CreateQuizActivity::class.java)
         startActivity(intent)
     }
 
-    private fun logout(context: Context) {
+    private fun leaderboard(){
+        val intent = Intent(this, LeaderboardActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun logout() {
         Firebase.auth.signOut()
         //finish()
-        val intent = Intent(context, MainActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
 }

@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonDefaults
@@ -17,25 +16,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.poquizowane.ui.theme.PoQuizowaneTheme
-import com.google.relay.compose.BoxScopeInstanceImpl.align
 
 class QuizSummaryActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val percent = "50%"
+        val percent = "50%"         // temporary value for showcase purposes
 
         setContent {
             PoQuizowaneTheme {
@@ -43,7 +39,7 @@ class QuizSummaryActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                 ) {
                     BackgroundImage()
-                    QuizSummary(this, percent)
+                    QuizSummary(percent)
                 }
             }
         }
@@ -73,7 +69,7 @@ class QuizSummaryActivity : ComponentActivity() {
     }
 
     @Composable
-    fun QuizSummary(context: Context, percent: String) {
+    fun QuizSummary(percent: String) {
         val composition by rememberLottieComposition(
             LottieCompositionSpec.RawRes(R.raw.success)
         )
@@ -113,25 +109,25 @@ class QuizSummaryActivity : ComponentActivity() {
                     color = Color.White,
                     fontStyle = FontStyle.Italic)
                 Spacer(modifier = Modifier.padding(15.dp))
-                Buttons(context)
+                Buttons()
             }
         }
     }
 
     @Composable
-    fun Buttons(context: Context) {
+    fun Buttons() {
         MyButton(text = "Try again") {
-            val intent = Intent(context, QuizSelectActivity::class.java)
+            val intent = Intent(this, QuizSelectActivity::class.java)
             startActivity(intent)
         }
         Spacer(modifier = Modifier.padding(15.dp))
         MyButton(text = "Another quiz") {
-            val intent = Intent(context, QuizSelectActivity::class.java)
+            val intent = Intent(this, QuizSelectActivity::class.java)
             startActivity(intent)
         }
         Spacer(modifier = Modifier.padding(15.dp))
         MyButton(text = "Main menu") {
-            val intent = Intent(context, HomeActivity::class.java)
+            val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
         }
         Spacer(modifier = Modifier.padding(15.dp))
@@ -145,7 +141,7 @@ class QuizSummaryActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize()
             ) {
                 BackgroundImage()
-                QuizSummary(this, "50%")
+                QuizSummary("50%")
             }
         }
     }
