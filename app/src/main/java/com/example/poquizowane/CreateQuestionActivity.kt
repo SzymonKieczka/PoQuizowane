@@ -26,13 +26,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.poquizowane.ui.theme.PoQuizowaneTheme
+import java.util.Locale
 
 class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener {
     lateinit var quiz: Quiz
     private var tts: TextToSpeech? = null
 
     override fun onInit(p0: Int) {
+        tts!!.setLanguage(Locale.US)
+    }
 
+    override fun onDestroy() {
+        if(tts != null) {
+            tts!!.stop()
+            tts!!.shutdown()
+        }
+        super.onDestroy()
     }
 
     fun say(text: String) {
