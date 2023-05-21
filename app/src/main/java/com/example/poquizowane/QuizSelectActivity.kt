@@ -7,12 +7,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,19 +31,34 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.poquizowane.ui.theme.PoQuizowaneTheme
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.google.relay.compose.BoxScopeInstanceImpl.align
 
 
 class QuizSelectActivity : ComponentActivity() {
+    private val db = Firebase.firestore
+    private val quizList = mutableStateListOf<Quiz>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        db.collection("quizzes").get().addOnSuccessListener { documents ->
+            for (document in documents) {
+                val quiz = document.toObject(Quiz::class.java)
+                quizList.add(quiz)
+            }
+        }.addOnFailureListener { exception ->
+            println("Error getting documents: $exception")
+        }
+
+
         setContent {
             PoQuizowaneTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     BackgroundImage()
-                    QuizSelect(this)
+                    QuizSelect(quizList, this)
                 }
             }
         }
@@ -54,22 +74,78 @@ class QuizSelectActivity : ComponentActivity() {
     }
 
     @Composable
-    fun MyButton(text: String, onclick: () -> Unit) {
+    fun MyButton(quiz: Quiz, onclick: () -> Unit) {
         androidx.compose.material.Button(
             colors = ButtonDefaults.buttonColors(Color.White),
             onClick = { onclick() },
             shape = RoundedCornerShape(30.dp),
             modifier = Modifier
                 .fillMaxWidth(1f)
-                .height(60.dp)
+                .height(100.dp)
         ) {
-            Text(text, fontSize = 14.sp, color = Color(0, 151, 91))
+            Row(
+                Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column{
+                    Text(quiz.name, fontSize = 24.sp, color = Color(0, 151, 91))
+
+                    Text(quiz.category, fontSize = 12.sp, color = Color(0, 151, 91))
+                }
+
+                Spacer(Modifier.weight(1f))
+
+                Column(
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Row {
+                        Box(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .border(1.dp, Color(0, 151, 91), CircleShape)
+                                .padding(4.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = when (quiz.difficulty) {
+                                    "hard" -> "H"
+                                    "medium" -> "M"
+                                    "easy" -> "E"
+                                    else -> "N/A"
+                                },
+                                fontSize = 12.sp,
+                                color = Color(0, 151, 91)
+                            )
+                        }
+
+                        Spacer(Modifier.width(8.dp))
+
+                        Box(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .border(1.dp, Color(0, 151, 91), CircleShape)
+                                .padding(4.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "${quiz.questions.size}",
+                                fontSize = 12.sp,
+                                color = Color(0, 151, 91)
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 
+
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun QuizSelect(context: Context) {
+    fun QuizSelect(quizList: List<Quiz>, context: Context) {
         val composition by rememberLottieComposition(
             LottieCompositionSpec.RawRes(R.raw.question)
         )
@@ -94,33 +170,37 @@ class QuizSelectActivity : ComponentActivity() {
                 )
             }
             Spacer(modifier = Modifier.padding(all = 10.dp))
-            Column (
+            LazyColumn (
                 Modifier
                     .weight(1.5f)
                     .padding(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
-            ) {
-                MyButton(text = "TEST") {
-                    val intent = Intent(context, QuizSummaryActivity::class.java)
-                    startActivity(intent)
+            ){
+                items(quizList) { quiz ->
+                    MyButton(quiz = quiz) {
+                        val intent = Intent(context, QuizSummaryActivity::class.java)
+                        intent.putExtra("quiz", quiz)
+                        startActivity(intent)
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         }
     }
 
-    @Preview(showBackground = true)
-    @Composable
-    fun DefaultPreview() {
-        PoQuizowaneTheme {
-            Surface(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                BackgroundImage()
-                QuizSelect(this)
-            }
-        }
-    }
+//    @Preview(showBackground = true)
+//    @Composable
+//    fun DefaultPreview() {
+//        PoQuizowaneTheme {
+//            Surface(
+//                modifier = Modifier.fillMaxSize()
+//            ) {
+//                BackgroundImage()
+//                QuizSelect(this)
+//            }
+//        }
+//    }
 }
 
 

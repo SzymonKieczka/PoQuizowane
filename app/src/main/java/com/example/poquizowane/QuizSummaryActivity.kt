@@ -88,7 +88,7 @@ class QuizSummaryActivity : ComponentActivity() {
             {
                 LottieAnimation(
                     composition = composition,
-                    iterations = LottieConstants.IterateForever,
+                    iterations = 1,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )

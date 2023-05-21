@@ -40,7 +40,6 @@ class CreateQuizActivity : ComponentActivity() {
         }
     }
 
-
     @Composable
     fun BackgroundImage() {
         Image(

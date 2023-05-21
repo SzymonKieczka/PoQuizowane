@@ -1,8 +1,11 @@
 package com.example.poquizowane
 
+import android.content.ContentValues.TAG
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,11 +29,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.poquizowane.ui.theme.PoQuizowaneTheme
-import java.util.Locale
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import java.util.*
 
 class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener {
     lateinit var quiz: Quiz
     private var tts: TextToSpeech? = null
+    private var selectedImageUri: Uri? = null
 
     override fun onInit(p0: Int) {
         tts!!.setLanguage(Locale.US)
@@ -127,6 +133,18 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                 fontSize = 40.sp,
                 color = Color.White
             )
+
+            IconButton(
+                onClick = {
+                    val str = "description: $description answers: a: $answer1, b: $answer2, c: $answer3, d: $answer4."
+                    say(str)
+                }) {
+                Icon(
+                    tint = Color.White,
+                    painter = painterResource(id = R.drawable.baseline_volume_up_24),
+                    contentDescription = "Speak text"
+                )
+            }
 
             Spacer(modifier = Modifier.padding(20.dp))
 
@@ -296,7 +314,9 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                 Button(
                     colors = ButtonDefaults.buttonColors(Color.White),
                     onClick = {
-                        //TODO: UPLOAD PIC
+                        val intent = Intent(Intent.ACTION_PICK)
+                        intent.type = "image/*"
+                        startActivityForResult(intent, 0)
                     },
                     shape = RoundedCornerShape(30.dp),
                     modifier = Modifier
@@ -319,11 +339,82 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                     colors = ButtonDefaults.buttonColors(Color.White),
                     onClick = {
                         if (validate()) {
-                            val question = Question(description, answer1, answer2, answer3, answer4, correct)
-                            quiz.addQuestion(question)
-                            val intent = Intent(applicationContext, HomeActivity::class.java)
-                            intent.putExtra("EXTRA_QUIZ", quiz)
-                            startActivity(intent)
+                            val imageRef = FirebaseStorage.getInstance().reference.child("images/${UUID.randomUUID()}")
+                            selectedImageUri?.let { uri ->
+                                imageRef.putFile(uri)
+                                    .addOnSuccessListener { taskSnapshot ->
+                                        taskSnapshot.storage.downloadUrl.addOnSuccessListener { uri ->
+                                            val question = Question(description, answer1, answer2, answer3, answer4, correct, uri.toString())
+                                            quiz.addQuestion(question)
+
+                                            val db = FirebaseFirestore.getInstance()
+
+                                            db.collection("quizzes")
+                                                .add(quiz.toMap())
+                                                .addOnSuccessListener { documentReference ->
+                                                    Toast.makeText(
+                                                        applicationContext,
+                                                        "Quiz saved successfully",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                    Log.d(
+                                                        TAG,
+                                                        "DocumentSnapshot written with ID: ${documentReference.id}"
+                                                    )
+                                                }
+                                                .addOnFailureListener { e ->
+                                                    Toast.makeText(
+                                                        applicationContext,
+                                                        "Quiz could not be saved",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                    Log.w(TAG, "Error adding document", e)
+                                                }
+
+                                            val intent = Intent(applicationContext, HomeActivity::class.java)
+                                            intent.putExtra("EXTRA_QUIZ", quiz)
+                                            startActivity(intent)
+                                        }
+                                    }
+                            } ?: run {
+                                val question = Question(
+                                    description,
+                                    answer1,
+                                    answer2,
+                                    answer3,
+                                    answer4,
+                                    correct
+                                )
+                                quiz.addQuestion(question)
+
+                                val db = FirebaseFirestore.getInstance()
+
+                                db.collection("quizzes")
+                                    .add(quiz.toMap())
+                                    .addOnSuccessListener { documentReference ->
+                                        Toast.makeText(
+                                            applicationContext,
+                                            "Quiz saved successfully",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        Log.d(
+                                            TAG,
+                                            "DocumentSnapshot written with ID: ${documentReference.id}"
+                                        )
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Toast.makeText(
+                                            applicationContext,
+                                            "Quiz could not be saved",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        Log.w(TAG, "Error adding document", e)
+                                    }
+
+                                val intent = Intent(applicationContext, HomeActivity::class.java)
+                                intent.putExtra("EXTRA_QUIZ", quiz)
+                                startActivity(intent)
+                            }
                         }
                     },
                     shape = RoundedCornerShape(30.dp),
@@ -344,8 +435,7 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                         colors = ButtonDefaults.buttonColors(Color.White),
                         onClick = {
                             if (validate()) {
-                                val str = "description $description answers: $answer1, $answer2, $answer3, $answer4."
-                                say(str)
+
                                 val question = Question(description, answer1, answer2, answer3, answer4, correct)
                                 quiz.addQuestion(question)
                                 val intent = Intent(applicationContext, CreateQuestionActivity::class.java)
@@ -369,6 +459,18 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
 
         }
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
+            selectedImageUri = data.data
+            Toast.makeText(
+                applicationContext,
+                "Image succesfully picked",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
 
