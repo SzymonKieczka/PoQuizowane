@@ -179,7 +179,7 @@ class QuizSelectActivity : ComponentActivity() {
             ){
                 items(quizList) { quiz ->
                     MyButton(quiz = quiz) {
-                        val intent = Intent(context, QuizSummaryActivity::class.java)
+                        val intent = Intent(context, QuizPlayActivity::class.java)
                         intent.putExtra("quiz", quiz)
                         startActivity(intent)
                     }

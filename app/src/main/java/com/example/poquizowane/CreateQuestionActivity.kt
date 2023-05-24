@@ -84,17 +84,17 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
     fun Inputs() {
         val q = 1 + quiz.questions.size
         var description by remember { mutableStateOf("") }
-        var answer1 by remember { mutableStateOf("") }
-        var answer2 by remember { mutableStateOf("") }
-        var answer3 by remember { mutableStateOf("") }
-        var answer4 by remember { mutableStateOf("") }
+        var answerA by remember { mutableStateOf("") }
+        var answerB by remember { mutableStateOf("") }
+        var answerC by remember { mutableStateOf("") }
+        var answerD by remember { mutableStateOf("") }
         val options = listOf("correct answer", "A", "B", "C", "D")
         var correct by remember { mutableStateOf(options[0]) }
         var uploadText by remember { mutableStateOf("upload picture") }
         val white = Color.White
 
         fun validate(): Boolean {
-            if (answer1 == "" || answer2 == "" || answer3 == "" || answer4 == "") {
+            if (answerA == "" || answerB == "" || answerC == "" || answerD == "") {
                 Toast.makeText(
                     applicationContext,
                     "all answers must be filled",
@@ -136,7 +136,7 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
 
             IconButton(
                 onClick = {
-                    val str = "description: $description answers: a: $answer1, b: $answer2, c: $answer3, d: $answer4."
+                    val str = "description: $description answers: a: $answerA, b: $answerB, c: $answerC, d: $answerD."
                     say(str)
                 }) {
                 Icon(
@@ -174,8 +174,8 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
 
             Row {
                 OutlinedTextField(
-                    value = answer1,
-                    onValueChange = { answer1 = it },
+                    value = answerA,
+                    onValueChange = { answerA = it },
                     label = { Text(text = "A") },
                     placeholder = { Text(text = "answer A") },
                     singleLine = true,
@@ -196,8 +196,8 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                 Spacer(modifier = Modifier.padding(10.dp))
 
                 OutlinedTextField(
-                    value = answer2,
-                    onValueChange = { answer2 = it },
+                    value = answerB,
+                    onValueChange = { answerB = it },
                     label = { Text(text = "B") },
                     placeholder = { Text(text = "answer B") },
                     singleLine = true,
@@ -220,8 +220,8 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
 
             Row {
                 OutlinedTextField(
-                    value = answer3,
-                    onValueChange = { answer3 = it },
+                    value = answerC,
+                    onValueChange = { answerC = it },
                     label = { Text(text = "C") },
                     placeholder = { Text(text = "answer C") },
                     singleLine = true,
@@ -242,8 +242,8 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                 Spacer(modifier = Modifier.padding(10.dp))
 
                 OutlinedTextField(
-                    value = answer4,
-                    onValueChange = { answer4 = it },
+                    value = answerD,
+                    onValueChange = { answerD = it },
                     label = { Text(text = "D") },
                     placeholder = { Text(text = "answer D") },
                     singleLine = true,
@@ -344,7 +344,7 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                                 imageRef.putFile(uri)
                                     .addOnSuccessListener { taskSnapshot ->
                                         taskSnapshot.storage.downloadUrl.addOnSuccessListener { uri ->
-                                            val question = Question(description, answer1, answer2, answer3, answer4, correct, uri.toString())
+                                            val question = Question(description, answerA, answerB, answerC, answerD, correct, uri.toString())
                                             quiz.addQuestion(question)
 
                                             val db = FirebaseFirestore.getInstance()
@@ -379,10 +379,10 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                             } ?: run {
                                 val question = Question(
                                     description,
-                                    answer1,
-                                    answer2,
-                                    answer3,
-                                    answer4,
+                                    answerA,
+                                    answerB,
+                                    answerC,
+                                    answerD,
                                     correct
                                 )
                                 quiz.addQuestion(question)
@@ -436,7 +436,7 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                         onClick = {
                             if (validate()) {
 
-                                val question = Question(description, answer1, answer2, answer3, answer4, correct)
+                                val question = Question(description, answerA, answerB, answerC, answerD, correct)
                                 quiz.addQuestion(question)
                                 val intent = Intent(applicationContext, CreateQuestionActivity::class.java)
                                 intent.putExtra("EXTRA_QUIZ", quiz)

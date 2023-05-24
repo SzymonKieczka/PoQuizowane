@@ -28,10 +28,14 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.poquizowane.ui.theme.PoQuizowaneTheme
 
 class QuizSummaryActivity : ComponentActivity() {
+    var correctAnswers: Int = 0;
+    var totalQuestions: Int = 0;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        correctAnswers = intent.getIntExtra("correctAnswers", 0)
+        totalQuestions = intent.getIntExtra("totalQuestions", 0)
 
-        val percent = "50%"         // temporary value for showcase purposes
+        val percent = (correctAnswers.toDouble() / totalQuestions.toDouble() * 100).toInt().toString() + "%"
 
         setContent {
             PoQuizowaneTheme {

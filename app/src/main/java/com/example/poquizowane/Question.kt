@@ -6,10 +6,10 @@ import java.io.Serializable
 @VersionedParcelize
 data class Question @JvmOverloads constructor(
     val description: String = "",
-    val answer1: String = "",
-    val answer2: String = "",
-    val answer3: String = "",
-    val answer4: String = "",
+    val answerA: String = "",
+    val answerB: String = "",
+    val answerC: String = "",
+    val answerD: String = "",
     val correctAnswer: String = "",
     val imageUrl: String? = null
 ) : Serializable {
@@ -17,11 +17,11 @@ data class Question @JvmOverloads constructor(
     fun toMap(): Map<String, Any> {
         val result = HashMap<String, Any>()
         result["description"] = this.description
-        result["answer1"] = this.answer1
-        result["answer2"] = this.answer2
-        result["answer3"] = this.answer3
-        result["answer4"] = this.answer4
-        result["correct"] = this.correctAnswer
+        result["answerA"] = this.answerA
+        result["answerB"] = this.answerB
+        result["answerC"] = this.answerC
+        result["answerD"] = this.answerD
+        result["correctAnswer"] = this.correctAnswer
         result["imageUrl"] = this.imageUrl ?: ""
         return result
     }
