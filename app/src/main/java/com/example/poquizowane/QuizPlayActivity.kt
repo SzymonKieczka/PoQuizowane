@@ -5,12 +5,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,24 +45,34 @@ class QuizPlayActivity : ComponentActivity() {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text(
+                text = "Question ${currentQuestion + 1}/${quiz.questions.size}",
+                style = MaterialTheme.typography.headlineLarge,
+                color = Color.White,
+                modifier = Modifier
+                    .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+            )
             if (question.imageUrl != null && question.imageUrl != "") {
                 AsyncImage(
                     model = question.imageUrl,
                     contentDescription = question.description,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp),
+                        .height(maxOf(300.dp))
+                        .padding(horizontal = 10.dp)
                 )
             }
 
             Surface(
                 modifier = Modifier.padding(16.dp),
                 shape = RoundedCornerShape(8.dp),
-                shadowElevation = 4.dp
+                shadowElevation = 4.dp,
+                color = Color(0, 151, 91),
+                border = BorderStroke(1.dp, Color.Black)
             ) {
                 Text(
                     text = question.description,
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(16.dp)
                 )
             }
@@ -71,10 +80,10 @@ class QuizPlayActivity : ComponentActivity() {
             Row {
                 Column {
                     AnswerButton(question.answerA, onAnswerClick, "A")
-                    AnswerButton(question.answerB, onAnswerClick, "C")
+                    AnswerButton(question.answerB, onAnswerClick, "B")
                 }
                 Column {
-                    AnswerButton(question.answerC, onAnswerClick, "B")
+                    AnswerButton(question.answerC, onAnswerClick, "C")
                     AnswerButton(question.answerD, onAnswerClick, "D")
                 }
             }
@@ -86,8 +95,11 @@ class QuizPlayActivity : ComponentActivity() {
         Button(
             onClick = { onClick(questionNumber) },
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(8.dp)
+                .width(150.dp),
+            colors = ButtonDefaults.buttonColors( Color(0, 151, 91)),
+            border = BorderStroke(1.dp, Color.Black)
+
         ) {
             Text(text = answer)
         }

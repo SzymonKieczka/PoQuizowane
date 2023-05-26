@@ -4,6 +4,11 @@
     <style name="Theme.PoQuizowane" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/seed</item>
         <item name="android:navigationBarColor">@color/seed</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:background">@color/seed</item>
     </style>
 
     <style name="Theme.PoQuizowane.Starting" parent="Theme.SplashScreen">
@@ -11,4 +16,5 @@
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_screen_foreground</item>
         <item name="postSplashScreenTheme">@style/Theme.PoQuizowane</item>
     </style>
+
 </resources>
