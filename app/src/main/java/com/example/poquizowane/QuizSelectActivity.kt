@@ -189,18 +189,20 @@ class QuizSelectActivity : ComponentActivity() {
         }
     }
 
-//    @Preview(showBackground = true)
-//    @Composable
-//    fun DefaultPreview() {
-//        PoQuizowaneTheme {
-//            Surface(
-//                modifier = Modifier.fillMaxSize()
-//            ) {
-//                BackgroundImage()
-//                QuizSelect(this)
-//            }
-//        }
-//    }
+    /*
+    @Preview(showBackground = true)
+    @Composable
+    fun DefaultPreview() {
+        PoQuizowaneTheme {
+            Surface(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                BackgroundImage()
+                QuizSelect(quizList, this)
+            }
+        }
+    }
+     */
 }
 
 
