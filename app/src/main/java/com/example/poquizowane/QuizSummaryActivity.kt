@@ -2,6 +2,7 @@ package com.example.poquizowane
 
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -36,6 +37,7 @@ class QuizSummaryActivity : ComponentActivity() {
     lateinit var quiz: Quiz
     private lateinit var userRepository: UserRepository
     private lateinit var auth: FirebaseAuth
+    private lateinit var mediaPlayer: MediaPlayer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = FirebaseAuth.getInstance()
@@ -58,6 +60,17 @@ class QuizSummaryActivity : ComponentActivity() {
                 }
             }
         }
+        val id = if (percentScore <= 30) {
+            R.raw.lose_sound
+        }
+        else if (percentScore >= 70) {
+            R.raw.win_sound
+        }
+        else {
+            R.raw.success_sound
+        }
+        mediaPlayer = MediaPlayer.create(this, id)
+        mediaPlayer.start()
         updateUserQuizScore(percentScore)
     }
 
@@ -104,8 +117,19 @@ class QuizSummaryActivity : ComponentActivity() {
 
     @Composable
     fun QuizSummary(percent: String) {
+        val percentNum = percent.replace("%","") .toInt()
+        val id = if (percentNum <= 30) {
+            R.raw.failure
+        }
+        else if (percentNum >= 70) {
+            R.raw.win
+        }
+        else {
+            R.raw.success
+        }
+
         val composition by rememberLottieComposition(
-            LottieCompositionSpec.RawRes(R.raw.success)
+            LottieCompositionSpec.RawRes(id)
         )
         Column(
             modifier = Modifier
