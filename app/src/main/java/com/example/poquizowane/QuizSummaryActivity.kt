@@ -26,16 +26,27 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.poquizowane.ui.theme.PoQuizowaneTheme
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 class QuizSummaryActivity : ComponentActivity() {
     var correctAnswers: Int = 0;
     var totalQuestions: Int = 0;
+    lateinit var quiz: Quiz
+    private lateinit var userRepository: UserRepository
+    private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        auth = FirebaseAuth.getInstance()
+        userRepository = UserRepository(FirebaseFirestore.getInstance())
         correctAnswers = intent.getIntExtra("correctAnswers", 0)
         totalQuestions = intent.getIntExtra("totalQuestions", 0)
+        quiz = intent.getSerializableExtra("quiz") as Quiz
 
-        val percent = (correctAnswers.toDouble() / totalQuestions.toDouble() * 100).toInt().toString() + "%"
+
+        val percentScore = (correctAnswers.toDouble() / totalQuestions.toDouble() * 100).toInt()
+        val percent = "$percentScore%"
 
         setContent {
             PoQuizowaneTheme {
@@ -46,6 +57,25 @@ class QuizSummaryActivity : ComponentActivity() {
                     QuizSummary(percent)
                 }
             }
+        }
+        updateUserQuizScore(percentScore)
+    }
+
+    private fun updateUserQuizScore(percentScore: Int) {
+        val userId = auth.currentUser?.uid
+        val userEmail = auth.currentUser?.email
+        if (userId != null && userEmail != null) {
+            userRepository.getUser(
+                uid = userId,
+                onSuccess = { user ->
+                    quiz.id?.let { userRepository.updateQuizScore(user, it, percentScore, {}, {}) }
+                },
+                onFailure = {
+                    val newUser = User(userId, hashMapOf((quiz.id to percentScore) as Pair<String, Int>), userEmail)
+                    userRepository.addUser(newUser, {}, {})
+                }
+            )
+        } else {
         }
     }
 

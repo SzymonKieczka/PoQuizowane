@@ -37,6 +37,8 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
     lateinit var quiz: Quiz
     private var tts: TextToSpeech? = null
     private var selectedImageUri: Uri? = null
+    private val quizRepository = QuizRepository(FirebaseFirestore.getInstance())
+
 
     override fun onInit(p0: Int) {
         tts!!.setLanguage(Locale.US)
@@ -349,20 +351,18 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
 
                                             val db = FirebaseFirestore.getInstance()
 
-                                            db.collection("quizzes")
-                                                .add(quiz.toMap())
-                                                .addOnSuccessListener { documentReference ->
+                                            quizRepository.addQuiz(quiz,
+                                                onSuccess = {
                                                     Toast.makeText(
                                                         applicationContext,
                                                         "Quiz saved successfully",
                                                         Toast.LENGTH_SHORT
                                                     ).show()
-                                                    Log.d(
-                                                        TAG,
-                                                        "DocumentSnapshot written with ID: ${documentReference.id}"
-                                                    )
-                                                }
-                                                .addOnFailureListener { e ->
+                                                    val intent = Intent(applicationContext, HomeActivity::class.java)
+                                                    intent.putExtra("EXTRA_QUIZ", quiz)
+                                                    startActivity(intent)
+                                                },
+                                                onFailure = { e ->
                                                     Toast.makeText(
                                                         applicationContext,
                                                         "Quiz could not be saved",
@@ -370,10 +370,7 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                                                     ).show()
                                                     Log.w(TAG, "Error adding document", e)
                                                 }
-
-                                            val intent = Intent(applicationContext, HomeActivity::class.java)
-                                            intent.putExtra("EXTRA_QUIZ", quiz)
-                                            startActivity(intent)
+                                            )
                                         }
                                     }
                             } ?: run {
@@ -387,22 +384,18 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                                 )
                                 quiz.addQuestion(question)
 
-                                val db = FirebaseFirestore.getInstance()
-
-                                db.collection("quizzes")
-                                    .add(quiz.toMap())
-                                    .addOnSuccessListener { documentReference ->
+                                quizRepository.addQuiz(quiz,
+                                    onSuccess = {
                                         Toast.makeText(
                                             applicationContext,
                                             "Quiz saved successfully",
                                             Toast.LENGTH_SHORT
                                         ).show()
-                                        Log.d(
-                                            TAG,
-                                            "DocumentSnapshot written with ID: ${documentReference.id}"
-                                        )
-                                    }
-                                    .addOnFailureListener { e ->
+                                        val intent = Intent(applicationContext, HomeActivity::class.java)
+                                        intent.putExtra("EXTRA_QUIZ", quiz)
+                                        startActivity(intent)
+                                    },
+                                    onFailure = { e ->
                                         Toast.makeText(
                                             applicationContext,
                                             "Quiz could not be saved",
@@ -410,10 +403,7 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                                         ).show()
                                         Log.w(TAG, "Error adding document", e)
                                     }
-
-                                val intent = Intent(applicationContext, HomeActivity::class.java)
-                                intent.putExtra("EXTRA_QUIZ", quiz)
-                                startActivity(intent)
+                                )
                             }
                         }
                     },

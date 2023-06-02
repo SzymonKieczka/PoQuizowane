@@ -31,6 +31,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.poquizowane.ui.theme.PoQuizowaneTheme
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.relay.compose.BoxScopeInstanceImpl.align
@@ -39,8 +40,28 @@ import com.google.relay.compose.BoxScopeInstanceImpl.align
 class QuizSelectActivity : ComponentActivity() {
     private val db = Firebase.firestore
     private val quizList = mutableStateListOf<Quiz>()
+    private val userRepository = UserRepository(Firebase.firestore)
+    private var user: User? = null
+    private lateinit var auth: FirebaseAuth
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        auth = FirebaseAuth.getInstance()
+
+        val userId = auth.currentUser?.uid
+        userId?.let {
+            userRepository.getUser(it,
+                onSuccess = { fetchedUser ->
+                    user = fetchedUser
+                },
+                onFailure = { exception ->
+                    println("Error getting user: $exception")
+                }
+            )
+        }
 
         db.collection("quizzes").get().addOnSuccessListener { documents ->
             for (document in documents) {
@@ -74,7 +95,7 @@ class QuizSelectActivity : ComponentActivity() {
     }
 
     @Composable
-    fun MyButton(quiz: Quiz, onclick: () -> Unit) {
+    fun MyButton(quiz: Quiz, user: User?, onclick: () -> Unit) {
         androidx.compose.material.Button(
             colors = ButtonDefaults.buttonColors(Color.White),
             onClick = { onclick() },
@@ -91,8 +112,12 @@ class QuizSelectActivity : ComponentActivity() {
             ) {
                 Column{
                     Text(quiz.name, fontSize = 24.sp, color = Color(0, 151, 91))
-
                     Text(quiz.category, fontSize = 12.sp, color = Color(0, 151, 91))
+
+                    // Displaying the best score if the user has taken the quiz
+                    user?.quizScores?.get(quiz.id)?.let { bestScore ->
+                        Text("Best score: $bestScore", fontSize = 12.sp, color = Color(0, 151, 91))
+                    }
                 }
 
                 Spacer(Modifier.weight(1f))
@@ -100,6 +125,23 @@ class QuizSelectActivity : ComponentActivity() {
                 Column(
                     horizontalAlignment = Alignment.End
                 ) {
+                    Row (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        horizontalArrangement = Arrangement.End
+                            ){
+                        user?.quizScores?.containsKey(quiz.id)?.let { hasTakenQuiz ->
+                            if (hasTakenQuiz) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.baseline_check_circle_outline_24),
+                                    contentDescription = "Completed icon",
+                                    modifier = Modifier.size(26.dp)
+                                )
+                            }
+                        }
+                    }
+
                     Row {
                         Box(
                             modifier = Modifier
@@ -108,6 +150,7 @@ class QuizSelectActivity : ComponentActivity() {
                                 .padding(4.dp),
                             contentAlignment = Alignment.Center
                         ) {
+
                             Text(
                                 text = when (quiz.difficulty) {
                                     "hard" -> "H"
@@ -140,6 +183,7 @@ class QuizSelectActivity : ComponentActivity() {
             }
         }
     }
+
 
 
 
@@ -178,7 +222,7 @@ class QuizSelectActivity : ComponentActivity() {
                 verticalArrangement = Arrangement.Center
             ){
                 items(quizList) { quiz ->
-                    MyButton(quiz = quiz) {
+                    MyButton(quiz = quiz, user = user) {
                         val intent = Intent(context, QuizPlayActivity::class.java)
                         intent.putExtra("quiz", quiz)
                         startActivity(intent)

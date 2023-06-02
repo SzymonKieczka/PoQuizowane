@@ -204,7 +204,7 @@ class CreateQuizActivity : ComponentActivity() {
                         ).show()
                     } else {
                         val intent = Intent(applicationContext, CreateQuestionActivity::class.java)
-                        val quiz = Quiz(name, category, difficulty, mutableListOf<Question>())
+                        val quiz = Quiz(null, name, category, difficulty, mutableListOf<Question>())
                         intent.putExtra("EXTRA_QUIZ", quiz)
                         startActivity(intent)
                     }

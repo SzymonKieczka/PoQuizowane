@@ -246,6 +246,7 @@ class QuizPlayActivity : ComponentActivity(), TextToSpeech.OnInitListener {
             val intent = Intent(this.applicationContext, QuizSummaryActivity::class.java)
             intent.putExtra("correctAnswers", correctAnswers)
             intent.putExtra("totalQuestions", quiz.questions.size)
+            intent.putExtra("quiz", quiz)
             startActivity(intent)
             finish()
         } else {

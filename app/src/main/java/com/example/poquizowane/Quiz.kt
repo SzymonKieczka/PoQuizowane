@@ -5,6 +5,7 @@ import java.io.Serializable
 
 @VersionedParcelize
 data class Quiz @JvmOverloads constructor(
+    val id: String? = "",
     val name: String = "",
     val category: String = "",
     val difficulty: String = "",
