@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,6 +41,8 @@ class LeaderboardActivity : ComponentActivity() {
 
     private val db = Firebase.firestore
     private val userList = mutableStateListOf<User>()
+    val LEADERBOARDSCREENTAG = "leaderboardscreen"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -56,7 +59,7 @@ class LeaderboardActivity : ComponentActivity() {
         setContent {
             PoQuizowaneTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize().testTag(LEADERBOARDSCREENTAG)
                 ) {
                     BackgroundImage()
                     LeaderBoard(userList)

@@ -28,6 +28,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.poquizowane.ui.theme.PoQuizowaneTheme
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,6 +52,14 @@ fun SignInSignUpScreen(authViewModel: AuthViewModel) {
     val cardWeight by animateFloatAsState(if (isSignUp) 1.5f else 1f)
     val context = LocalContext.current
 
+    val LOTTIETAG = "lottie"
+    val EMAILTAG = "email"
+    val PASSWORDTAG = "password"
+    val CONFIRMTAG = "confirm"
+    val SUBMITTAG = "submit"
+    val CHANGEMODETAG = "changemode"
+
+
     PoQuizowaneTheme {
         Column(
             Modifier
@@ -65,13 +74,15 @@ fun SignInSignUpScreen(authViewModel: AuthViewModel) {
                     .size(180.dp)
             )
             {
+
                 LottieAnimation(
                     composition = composition,
                     iterations = LottieConstants.IterateForever,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxSize().testTag(LOTTIETAG)
                 )
+
             }
             Card(
                 Modifier
@@ -98,6 +109,7 @@ fun SignInSignUpScreen(authViewModel: AuthViewModel) {
                             singleLine = true,
                             modifier = Modifier
                                 .fillMaxWidth(1f)
+                                .testTag(EMAILTAG)
                         )
 
                         Spacer(modifier = Modifier.padding(10.dp))
@@ -123,6 +135,7 @@ fun SignInSignUpScreen(authViewModel: AuthViewModel) {
                             else PasswordVisualTransformation(),
                             modifier = Modifier
                                 .fillMaxWidth(1f)
+                                .testTag(PASSWORDTAG)
                         )
 
                         Spacer(modifier = Modifier.padding(10.dp))
@@ -150,6 +163,7 @@ fun SignInSignUpScreen(authViewModel: AuthViewModel) {
                                 modifier = Modifier
                                     .fillMaxWidth(1f)
                                     .padding(bottom = 16.dp)
+                                    .testTag(CONFIRMTAG)
                             )
 
                         }
@@ -173,6 +187,7 @@ fun SignInSignUpScreen(authViewModel: AuthViewModel) {
                             modifier = Modifier
                                 .fillMaxWidth(1f)
                                 .height(60.dp)
+                                .testTag(SUBMITTAG)
                         )
                         {
                             if (isSignUp)
@@ -190,6 +205,7 @@ fun SignInSignUpScreen(authViewModel: AuthViewModel) {
                             modifier = Modifier
                                 .fillMaxWidth(1f)
                                 .height(60.dp)
+                                .testTag(CHANGEMODETAG)
                         )
                         {
                             if (isSignUp)

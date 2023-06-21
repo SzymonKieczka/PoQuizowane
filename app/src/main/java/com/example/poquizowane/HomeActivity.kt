@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,12 +27,19 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class HomeActivity : ComponentActivity() {
+
+    val HOMESCREENTAG = "homescreen"
+    val PLAYTAG = "play"
+    val CREATETAG = "create"
+    val LEADERBOARDTAG = "leaderboard"
+    val LOGOUTTAG = "logout"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             PoQuizowaneTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().testTag(HOMESCREENTAG),
                     color = MaterialTheme.colors.background
                 ) {
                     BackgroundImage()
@@ -69,7 +77,7 @@ class HomeActivity : ComponentActivity() {
     }
 
     @Composable
-    fun MyButton(text: String, onclick: () -> Unit) {
+    fun MyButton(text: String, tag: String = "", onclick: () -> Unit) {
         Button(
             colors = ButtonDefaults.buttonColors(Color.White),
             onClick = { onclick() },
@@ -77,6 +85,7 @@ class HomeActivity : ComponentActivity() {
             modifier = Modifier
                 .fillMaxWidth(1f)
                 .height(60.dp)
+                .testTag(tag)
         ) {
             Text(text, fontSize = 14.sp, color = Color(0, 151, 91))
         }
@@ -89,13 +98,13 @@ class HomeActivity : ComponentActivity() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom
         ) {
-            MyButton("Play") { play() }
+            MyButton("Play", PLAYTAG) { play() }
             Spacer(modifier = Modifier.padding(10.dp))
-            MyButton("Create") { create() }
+            MyButton("Create", CREATETAG) { create() }
             Spacer(modifier = Modifier.padding(10.dp))
-            MyButton("Leaderboard") { leaderboard() }
+            MyButton("Leaderboard", LEADERBOARDTAG) { leaderboard() }
             Spacer(modifier = Modifier.padding(10.dp))
-            MyButton("Log out") { logout() }
+            MyButton("Log out", LOGOUTTAG) { logout() }
         }
     }
 

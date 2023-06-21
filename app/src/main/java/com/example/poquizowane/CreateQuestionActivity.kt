@@ -52,7 +52,7 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
         super.onDestroy()
     }
 
-    fun say(text: String) {
+    private fun say(text: String) {
         tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
     }
 

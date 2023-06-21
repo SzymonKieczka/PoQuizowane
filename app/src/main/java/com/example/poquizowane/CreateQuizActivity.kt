@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,6 +27,12 @@ import androidx.compose.ui.unit.sp
 import com.example.poquizowane.ui.theme.PoQuizowaneTheme
 
 class CreateQuizActivity : ComponentActivity() {
+
+    val NAMETAG = "quizname"
+    val CATEGORYTAG = "category"
+    val DIFFICULTYTAG = "difficulty"
+    val NEXTTAG = "next"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -84,7 +91,7 @@ class CreateQuizActivity : ComponentActivity() {
                 placeholder = { Text(text = "enter quiz name") },
                 singleLine = true,
                 readOnly = false,
-                modifier = Modifier.fillMaxWidth(1f),
+                modifier = Modifier.fillMaxWidth(1f).testTag(NAMETAG),
                 shape = RoundedCornerShape(30.dp),
                 colors = outlinedTextFieldColors(
                     textColor = white,
@@ -107,7 +114,7 @@ class CreateQuizActivity : ComponentActivity() {
                 expanded = categoryExpanded,
                 onExpandedChange = {
                     categoryExpanded = !categoryExpanded
-                }
+                }, modifier = Modifier.testTag(CATEGORYTAG)
             ) {
                 OutlinedTextField(
                     value = category,
@@ -138,7 +145,8 @@ class CreateQuizActivity : ComponentActivity() {
                                 category = option
                                 categoryExpanded = false
                             },
-                            text = { Text(text = option) }
+                            text = { Text(text = option) },
+                            modifier = Modifier.testTag(option)
                         )
                     }
                 }
@@ -154,7 +162,7 @@ class CreateQuizActivity : ComponentActivity() {
                 expanded = difficultyExpanded,
                 onExpandedChange = {
                     difficultyExpanded = !difficultyExpanded
-                }
+                }, modifier = Modifier.testTag(DIFFICULTYTAG)
             ) {
                 OutlinedTextField(
                     value = difficulty,
@@ -185,7 +193,8 @@ class CreateQuizActivity : ComponentActivity() {
                                 difficulty = option
                                 difficultyExpanded = false
                             },
-                            text = { Text(text = option) }
+                            text = { Text(text = option) },
+                            modifier = Modifier.testTag(option)
                         )
                     }
                 }
@@ -210,7 +219,7 @@ class CreateQuizActivity : ComponentActivity() {
                     }
                 },
                 shape = CircleShape,
-                modifier = Modifier.size(60.dp)
+                modifier = Modifier.size(60.dp).testTag(NEXTTAG)
             ) {
                 Icon(
                     imageVector = Icons.Default.ArrowForward,

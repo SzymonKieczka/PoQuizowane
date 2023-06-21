@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.poquizowane.ui.theme.PoQuizowaneTheme
@@ -43,7 +44,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PoQuizowaneTheme {
                 Surface (
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().testTag("signinsignupscreen"),
                     color = Color(0, 151, 91)
                 ) {
                     SignInSignUpScreen(authViewModel)

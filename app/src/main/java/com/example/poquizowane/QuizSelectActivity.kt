@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,7 +44,7 @@ class QuizSelectActivity : ComponentActivity() {
     private val userRepository = UserRepository(Firebase.firestore)
     private var user: User? = null
     private lateinit var auth: FirebaseAuth
-
+    val QUIZTAG = "quiz"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,7 +108,7 @@ class QuizSelectActivity : ComponentActivity() {
             Row(
                 Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp).testTag(QUIZTAG),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column{
