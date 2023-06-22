@@ -22,18 +22,25 @@ class UITest {
     val CHANGEMODETAG = "changemode"
 
     val HOMESCREENTAG = "homescreen"
-    val PLAYTAG = "play"
     val CREATETAG = "create"
     val LEADERBOARDTAG = "leaderboard"
     val LOGOUTTAG = "logout"
+
+    val LEADERBOARDSCREENTAG = "leaderboardscreen"
 
     val NAMETAG = "quizname"
     val CATEGORYTAG = "category"
     val DIFFICULTYTAG = "difficulty"
     val NEXTTAG = "next"
 
-    val LEADERBOARDSCREENTAG = "leaderboardscreen"
-    val QUIZTAG = "quiz"
+    val DESCTAG = "description"
+    val ATAG = "a"
+    val BTAG = "b"
+    val CTAG = "c"
+    val DTAG = "d"
+    val CORRECTTAG = "correct"
+    val SAVETAG = "save"
+    val MORETAG = "more"
 
     fun type(tag: String, text: String) {
         rule.onNodeWithTag(tag).performClick()
@@ -69,8 +76,10 @@ class UITest {
         rule.mainClock.autoAdvance = false
 
         click(LOGOUTTAG)
+        click(CHANGEMODETAG)
         type(EMAILTAG, mail)
         type(PASSWORDTAG, pass)
+        forward()
         type(CONFIRMTAG, pass)
 
         click(SUBMITTAG)
@@ -85,6 +94,7 @@ class UITest {
     fun createTest() {
         val date = SimpleDateFormat("yyyy-MM-dd-HH-mm").format(Date())
         val name = "test quiz $date"
+
         rule.mainClock.autoAdvance = false
 
         click(CREATETAG)
@@ -101,7 +111,34 @@ class UITest {
         forward()
         click(NEXTTAG)
         forward()
-        Thread.sleep(100000)
+        //Thread.sleep(100000)
+
+        type(DESCTAG, "test desc")
+        type(ATAG, "A")
+        type(BTAG, "B")
+        type(CTAG, "C")
+        type(DTAG, "D")
+        click(CORRECTTAG)
+        forward()
+        click("Bans")
+        forward()
+        click(MORETAG)
+
+        type(DESCTAG, "test desc")
+        type(ATAG, "A")
+        type(BTAG, "B")
+        type(CTAG, "C")
+        type(DTAG, "D")
+        click(CORRECTTAG)
+        forward()
+        click("Cans")
+        forward()
+        click(SAVETAG)
+
+        Thread.sleep(1000)
+        forward(2)
+        rule.onNodeWithTag(HOMESCREENTAG).assertIsDisplayed()
+        forward()
     }
 
 }

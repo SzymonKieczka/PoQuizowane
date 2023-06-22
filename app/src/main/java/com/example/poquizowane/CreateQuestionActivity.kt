@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,6 +40,14 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
     private var selectedImageUri: Uri? = null
     private val quizRepository = QuizRepository(FirebaseFirestore.getInstance())
 
+    val DESCTAG = "description"
+    val ATAG = "a"
+    val BTAG = "b"
+    val CTAG = "c"
+    val DTAG = "d"
+    val CORRECTTAG = "correct"
+    val SAVETAG = "save"
+    val MORETAG = "more"
 
     override fun onInit(p0: Int) {
         tts!!.setLanguage(Locale.US)
@@ -159,7 +168,8 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                 readOnly = false,
                 modifier = Modifier
                     .fillMaxWidth(1f)
-                    .height(120.dp),
+                    .height(120.dp)
+                    .testTag(DESCTAG),
                 shape = RoundedCornerShape(30.dp),
                 colors = outlinedTextFieldColors(
                     textColor = white,
@@ -182,7 +192,7 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                     placeholder = { Text(text = "answer A") },
                     singleLine = true,
                     readOnly = false,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).testTag(ATAG),
                     shape = RoundedCornerShape(30.dp),
                     colors = outlinedTextFieldColors(
                         textColor = white,
@@ -204,7 +214,7 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                     placeholder = { Text(text = "answer B") },
                     singleLine = true,
                     readOnly = false,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).testTag(BTAG),
                     shape = RoundedCornerShape(30.dp),
                     colors = outlinedTextFieldColors(
                         textColor = white,
@@ -228,7 +238,7 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                     placeholder = { Text(text = "answer C") },
                     singleLine = true,
                     readOnly = false,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).testTag(CTAG),
                     shape = RoundedCornerShape(30.dp),
                     colors = outlinedTextFieldColors(
                         textColor = white,
@@ -250,7 +260,7 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                     placeholder = { Text(text = "answer D") },
                     singleLine = true,
                     readOnly = false,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).testTag(DTAG),
                     shape = RoundedCornerShape(30.dp),
                     colors = outlinedTextFieldColors(
                         textColor = white,
@@ -271,7 +281,8 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                 ExposedDropdownMenuBox (
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxHeight(),
+                        .fillMaxHeight()
+                        .testTag(CORRECTTAG),
                     expanded = expanded,
                     onExpandedChange = {
                         expanded = !expanded
@@ -305,7 +316,8 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                                     correct = option
                                     expanded = false
                                 },
-                                text = { Text(text = option) }
+                                text = { Text(text = option) },
+                                modifier = Modifier.testTag("${option}ans")
                             )
                         }
                     }
@@ -411,6 +423,7 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
+                        .testTag(SAVETAG)
                 ) {
                     Text(
                         "save",
@@ -437,6 +450,7 @@ class CreateQuestionActivity : ComponentActivity(), TextToSpeech.OnInitListener 
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxHeight()
+                            .testTag(MORETAG)
                     ) {
                         Text(
                             "add more",
