@@ -47,7 +47,7 @@ class QuizSummaryActivity : ComponentActivity() {
         quiz = intent.getSerializableExtra("quiz") as Quiz
 
 
-        val percentScore = (correctAnswers.toDouble() / totalQuestions.toDouble() * 100).toInt()
+        val percentScore = calculateScorePercent(correctAnswers, totalQuestions)
         val percent = "$percentScore%"
 
         setContent {
@@ -203,6 +203,11 @@ class QuizSummaryActivity : ComponentActivity() {
             }
         }
     }
+}
+
+fun calculateScorePercent(correctAnswers: Int, totalQuestions: Int): Int {
+    if(totalQuestions == 0) throw ArithmeticException("totalQuestions cannot be 0")
+    return (correctAnswers.toDouble() / totalQuestions.toDouble() * 100).toInt()
 }
 
 

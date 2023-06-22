@@ -33,7 +33,9 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignInSignUpScreen(authViewModel: AuthViewModel) {
+fun SignInSignUpScreen(authViewModel: AuthViewModel, isTesting: Boolean = false) {
+    val isTestingState = remember { mutableStateOf(isTesting) }
+
     var email by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(""))
     }
@@ -77,7 +79,7 @@ fun SignInSignUpScreen(authViewModel: AuthViewModel) {
 
                 LottieAnimation(
                     composition = composition,
-                    iterations = LottieConstants.IterateForever,
+                    iterations = if (isTestingState.value) 1 else LottieConstants.IterateForever,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize().testTag(LOTTIETAG)
